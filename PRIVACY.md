@@ -17,6 +17,4 @@ This data is stored locally in your browser using Chrome's localStorage API and 
 If we modify this privacy policy, updates will be posted here and in the Chrome Web Store listing.
 
 ## Contact
-For questions about this privacy policy, contact [your-email]
-
-Last updated: January 26, 2025
+If you have any questions or concerns about this privacy policy or our data practices, please create an issue on our GitHub repository: [Infinite-Shortcuts-Chrome](https://github.com/swatified/Infinite-Shortcuts-Chrome/issues)
