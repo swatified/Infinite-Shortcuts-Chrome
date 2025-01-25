@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Infinite Shortcuts</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #4527a0 0%, #000051 100%);
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+        }
+        .shortcuts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
+            padding: 20px;
+            min-height: 200px;
+        }
+        .shortcut {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            transition: background 0.2s;
+            cursor: move;
+        }
+        .shortcut.dragging { opacity: 0.5; }
+        .shortcut:hover { background: rgba(255, 255, 255, 0.2); }
+        .shortcut img {
+            width: 32px;
+            height: 32px;
+            margin-bottom: 6px;
+        }
+        .shortcut span {
+            font-size: 12px;
+            max-width: 90px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .add-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            background: #6200ea;
+            color: white;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+        .add-button:hover { transform: scale(1.1); }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 300px;
+        }
+        .modal input {
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .modal button {
+            padding: 8px 16px;
+            margin: 8px 4px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .modal button.save {
+            background: #6200ea;
+            color: white;
+        }
+        .modal button.cancel { background: #ddd; }
+    </style>
+</head>
+<body>
+    <div class="shortcuts-grid" id="shortcuts"></div>
+    <button class="add-button" id="addButton">+</button>
+
+    <div class="modal" id="shortcutModal">
+        <div class="modal-content">
+            <input type="text" id="shortcutName" placeholder="Shortcut Name">
+            <input type="url" id="shortcutUrl" placeholder="URL (https://...)">
+            <button class="save" id="saveButton">Save</button>
+            <button class="cancel" id="cancelButton">Cancel</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
