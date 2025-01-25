@@ -27,43 +27,58 @@ function addShortcut() {
 }
 
 function createShortcut(name, url) {
-    const shortcut = document.createElement('div');
-    shortcut.className = 'shortcut';
-    shortcut.draggable = true;
+    const shortcutElement = document.createElement('div');
+    shortcutElement.className = 'shortcut';
+    shortcutElement.draggable = true;
     
     const fullUrl = url.startsWith('http') ? url : `https://${url}`;
     const domain = new URL(fullUrl).hostname;
-    const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
-    
-    shortcut.innerHTML = `
-        <button class="remove-btn" title="Remove shortcut">×</button>
-        <img src="${faviconUrl}" alt="${name}" data-url="${fullUrl}">
-        <span data-url="${fullUrl}">${name}</span>
+    const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+ 
+    const img = document.createElement('img');
+    img.src = faviconUrl;
+    img.alt = name;
+    img.dataset.url = fullUrl;
+ 
+    const nameSpan = document.createElement('span');
+    nameSpan.textContent = name;
+    nameSpan.dataset.url = fullUrl;
+ 
+    const removeButton = document.createElement('button');
+    removeButton.className = 'remove-btn';
+    removeButton.innerHTML = `
+      <svg width="9" height="9" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1 1L11 11M1 11L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
     `;
-    
-    shortcut.querySelector('.remove-btn').addEventListener('click', (e) => {
+ 
+    removeButton.addEventListener('click', (e) => {
         e.stopPropagation();
-        shortcut.remove();
+        shortcutElement.remove();
         saveShortcuts();
     });
-    
-    shortcut.addEventListener('dragstart', (e) => {
+ 
+    shortcutElement.appendChild(img);
+    shortcutElement.appendChild(nameSpan);
+    shortcutElement.appendChild(removeButton);
+ 
+    shortcutElement.addEventListener('dragstart', (e) => {
         e.target.classList.add('dragging');
         e.dataTransfer.setData('text/plain', name);
     });
  
-    shortcut.addEventListener('dragend', (e) => {
+    shortcutElement.addEventListener('dragend', (e) => {
         e.target.classList.remove('dragging');
     });
  
-    shortcut.addEventListener('click', (e) => {
+    shortcutElement.addEventListener('click', (e) => {
         e.preventDefault();
         const clickedElement = e.target;
         const targetUrl = clickedElement.dataset.url || clickedElement.querySelector('[data-url]').dataset.url;
         window.location.href = targetUrl;
     });
  
-    return shortcut;
+    return shortcutElement;
  }
 
 const shortcuts = document.getElementById('shortcuts');
