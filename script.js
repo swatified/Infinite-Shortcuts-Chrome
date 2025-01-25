@@ -82,6 +82,7 @@ loadShortcuts();
      
         shortcutElement.addEventListener('dragend', (e) => {
             e.target.classList.remove('dragging');
+            setTimeout(saveShortcuts, 50);
         });
      
         shortcutElement.addEventListener('click', (e) => {
@@ -96,18 +97,53 @@ loadShortcuts();
 
     const shortcuts = document.getElementById('shortcuts');
 
+    function getGridPosition(container, x, y) {
+        const gridItemWidth = 84; // 60px + 24px gap
+        const gridItemHeight = 80; // Approximate height including gap
+        
+        const rect = container.getBoundingClientRect();
+        const relativeX = x - rect.left;
+        const relativeY = y - rect.top;
+        
+        const col = Math.floor(relativeX / gridItemWidth);
+        const row = Math.floor(relativeY / gridItemHeight);
+        
+        return { col, row };
+    }
+    
     shortcuts.addEventListener('dragover', (e) => {
-       e.preventDefault();
-       const dragging = document.querySelector('.dragging');
-       const afterElement = getDragAfterElement(shortcuts, e.clientY);
-       
-       if (afterElement) {
-           shortcuts.insertBefore(dragging, afterElement);
-       } else {
-           shortcuts.appendChild(dragging);
-       }
+        e.preventDefault();
+        const dragging = document.querySelector('.dragging');
+        if (!dragging) return;
+    
+        const rect = shortcuts.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const gridWidth = rect.width / 12;
+        const gridHeight = 80; // Height of each grid cell including gap
+        
+        const gridCol = Math.floor(x / gridWidth);
+        const gridRow = Math.floor(y / gridHeight);
+        const position = gridRow * 12 + gridCol;
+        
+        const totalCells = Math.max(position + 1, shortcuts.children.length);
+        const rowsNeeded = Math.ceil(totalCells / 12);
+        
+        // Ensure we have enough rows
+        while (shortcuts.children.length < rowsNeeded * 12) {
+            const placeholder = document.createElement('div');
+            placeholder.style.visibility = 'hidden';
+            shortcuts.appendChild(placeholder);
+        }
+        
+        if (position >= 0 && position < shortcuts.children.length) {
+            shortcuts.insertBefore(dragging, shortcuts.children[position]);
+        } else {
+            shortcuts.appendChild(dragging);
+        }
     });
-
+    
     function getDragAfterElement(container, y) {
        const draggableElements = [...container.querySelectorAll('.shortcut:not(.dragging)')];
        
@@ -124,22 +160,59 @@ loadShortcuts();
     }
 
     function saveShortcuts() {
-       const shortcuts = Array.from(document.querySelectorAll('.shortcut')).map(s => ({
-           name: s.querySelector('span').textContent,
-           url: s.querySelector('[data-url]').dataset.url
-       }));
-       localStorage.setItem('shortcuts', JSON.stringify(shortcuts));
+        const shortcutElements = Array.from(document.querySelectorAll('.shortcut'));
+        const shortcuts = shortcutElements.map((shortcut, index) => {
+            const gridInfo = calculateGridPosition(shortcut);
+            return {
+                name: shortcut.querySelector('span').textContent,
+                url: shortcut.querySelector('[data-url]').dataset.url,
+                position: index,
+                gridX: gridInfo.gridX,
+                gridY: gridInfo.gridY
+            };
+        });
+        localStorage.setItem('shortcuts', JSON.stringify(shortcuts));
     }
-
+    
+    function calculateGridPosition(element) {
+        const container = document.getElementById('shortcuts');
+        const containerRect = container.getBoundingClientRect();
+        const elementRect = element.getBoundingClientRect();
+        const gridX = Math.floor((elementRect.left - containerRect.left) / (containerRect.width / 12));
+        const gridY = Math.floor((elementRect.top - containerRect.top) / 80);
+        return { gridX, gridY };
+    }
+    
     function loadShortcuts() {
-       const saved = localStorage.getItem('shortcuts');
-       if (saved) {
-           JSON.parse(saved).forEach(({name, url}) => {
-               document.getElementById('shortcuts').appendChild(
-                   createShortcut(name, url)
-               );
-           });
-       }
+        const saved = localStorage.getItem('shortcuts');
+        if (saved) {
+            const shortcuts = JSON.parse(saved);
+            const container = document.getElementById('shortcuts');
+            container.innerHTML = '';
+    
+            // Create grid with placeholders
+            const maxY = Math.max(...shortcuts.map(s => s.gridY), 0) + 1;
+            for (let i = 0; i < maxY * 12; i++) {
+                const placeholder = document.createElement('div');
+                placeholder.style.visibility = 'hidden';
+                container.appendChild(placeholder);
+            }
+    
+            // Place shortcuts in correct positions
+            shortcuts.forEach(({name, url, gridX, gridY}) => {
+                const position = (gridY * 12) + gridX;
+                const shortcut = createShortcut(name, url);
+                
+                if (position >= 0 && position < container.children.length) {
+                    container.insertBefore(shortcut, container.children[position]);
+                    if (container.children[position + 1] && container.children[position + 1].style.visibility === 'hidden') {
+                        container.children[position + 1].remove();
+                    }
+                } else {
+                    container.appendChild(shortcut);
+                }
+            });
+        }
     }
 
     shortcuts.addEventListener('dragend', saveShortcuts);

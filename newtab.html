@@ -5,8 +5,7 @@
     <style>
         body {
             margin: 0;
-            padding: 20px;
-            padding-top: 50px;
+            padding: 18px;
             background: linear-gradient(135deg, #4527a0 0%, #000051 100%);
             font-family: Arial, sans-serif;
             min-height: 100vh;
@@ -87,6 +86,13 @@
         .delete-zone svg {
             width: 24px;
             height: 24px;
+        }
+        .shortcuts-grid {
+            display: grid;
+            grid-template-columns: repeat(12, minmax(60px, 1fr));
+            gap: 12px;
+            padding: 10px;
+            min-height: 60px;
         }
         .modal {
             display: none;
