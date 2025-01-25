@@ -6,6 +6,7 @@
         body {
             margin: 0;
             padding: 20px;
+            padding-top: 50px;
             background: linear-gradient(135deg, #4527a0 0%, #000051 100%);
             font-family: Arial, sans-serif;
             min-height: 100vh;
@@ -45,25 +46,6 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-        .remove-btn {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            width: 16px;
-            height: 16px;
-            opacity: 0.7;
-            border: none;
-            font-size: 12px;
-            cursor: pointer;
-            display: none;
-            padding: 0;
-            line-height: 16px;
-        }
-
-        .shortcut:hover .remove-btn {
-            display: block;
-        }
-
         .add-button {
             position: fixed;
             bottom: 20px;
@@ -80,6 +62,32 @@
             transition: transform 0.2s;
         }
         .add-button:hover { transform: scale(1.1); }
+        .delete-zone {
+            position: fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            bottom: 20px;
+            right: 80px;
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            background: #800020;
+            color: white;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .delete-zone.dragover {
+            background: #590000;
+            transform: scale(1.1);
+        }
+        .delete-zone svg {
+            width: 24px;
+            height: 24px;
+        }
         .modal {
             display: none;
             position: fixed;
@@ -124,6 +132,11 @@
 <body>
     <div class="shortcuts-grid" id="shortcuts"></div>
     <button class="add-button" id="addButton">+</button>
+    <div class="delete-zone" id="deleteZone">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none">
+            <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+        </svg>
+    </div>
 
     <div class="modal" id="shortcutModal">
         <div class="modal-content">
