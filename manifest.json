@@ -2,6 +2,10 @@
     "manifest_version": 3,
     "name": "Infinite Shortcuts",
     "version": "1.0",
+    "description": "A Fancy Minecraft Theme to light up your new tabs!! New dynamic background/wallpaper on each refresh.",
+    "icons": {
+      "128": "icons/icon128.png"
+    },
     "chrome_url_overrides": {
       "newtab": "newtab.html"
     }

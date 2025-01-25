@@ -67,15 +67,21 @@ loadShortcuts();
         img.src = faviconUrl;
         img.alt = name;
         img.dataset.url = fullUrl;
+        img.draggable = false; // Prevent image dragging
      
         const nameSpan = document.createElement('span');
         nameSpan.textContent = name;
         nameSpan.dataset.url = fullUrl;
+        nameSpan.draggable = false; // Prevent text dragging
      
         shortcutElement.appendChild(img);
         shortcutElement.appendChild(nameSpan);
      
         shortcutElement.addEventListener('dragstart', (e) => {
+            if (e.target !== shortcutElement) {
+                e.preventDefault();
+                return;
+            }
             e.target.classList.add('dragging');
             e.dataTransfer.setData('text/plain', name);
         });
@@ -93,8 +99,8 @@ loadShortcuts();
         });
      
         return shortcutElement;
-     }
-
+    }
+    
     const shortcuts = document.getElementById('shortcuts');
 
     function getGridPosition(container, x, y) {
