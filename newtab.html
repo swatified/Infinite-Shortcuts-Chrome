@@ -18,6 +18,7 @@
             min-height: 60px;
         }
         .shortcut {
+            position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -44,6 +45,27 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
+        .remove-btn {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            font-size: 12px;
+            cursor: pointer;
+            display: none;
+            padding: 0;
+            line-height: 16px;
+        }
+
+        .shortcut:hover .remove-btn {
+            display: block;
+        }
+
         .add-button {
             position: fixed;
             bottom: 20px;

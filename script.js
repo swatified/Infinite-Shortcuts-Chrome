@@ -31,15 +31,21 @@ function createShortcut(name, url) {
     shortcut.className = 'shortcut';
     shortcut.draggable = true;
     
-    // Add https:// if missing
     const fullUrl = url.startsWith('http') ? url : `https://${url}`;
     const domain = new URL(fullUrl).hostname;
     const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
     
     shortcut.innerHTML = `
+        <button class="remove-btn" title="Remove shortcut">×</button>
         <img src="${faviconUrl}" alt="${name}" data-url="${fullUrl}">
         <span data-url="${fullUrl}">${name}</span>
     `;
+    
+    shortcut.querySelector('.remove-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        shortcut.remove();
+        saveShortcuts();
+    });
     
     shortcut.addEventListener('dragstart', (e) => {
         e.target.classList.add('dragging');
