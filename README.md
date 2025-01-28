@@ -1,4 +1,4 @@
-# Infinite Shortcuts - Chrome Extension 🚀
+# Infinite Shortcuts - Chrome Extension ∞
 
 Transform your new tab into a beautifully organized digital workspace with upto 72 shortcuts at your fingertips.
 - With nostalgic Windows type ui and intuitive drag-and-drop interface for easy organization and reordering.
